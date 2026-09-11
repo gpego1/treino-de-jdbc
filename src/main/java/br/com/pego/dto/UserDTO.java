@@ -1,6 +1,7 @@
 package br.com.pego.dto;
 
-import java.util.Date;
+
+import java.sql.Date;
 
 public record UserDTO(
         Integer id,

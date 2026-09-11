@@ -39,20 +39,17 @@ public class ProductDAO {
             try(
                     ResultSet rs = ps.executeQuery();
                     ) {
-                while (rs.next()) {
-                    rs.getInt("id");
-                    rs.getString("name");
-                    rs.getDouble("price");
-                    rs.getInt("quantity");
+                if (rs.next()) {
+                    return new ProductDTO(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getDouble("price"),
+                            rs.getInt("quantity")
+                    );
                 }
-                return new ProductDTO(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getDouble("price"),
-                        rs.getInt("quantity")
-                );
             }
         }
+        return null;
     }
 
     public void createPoduct(ProductDTO product) throws SQLException {
