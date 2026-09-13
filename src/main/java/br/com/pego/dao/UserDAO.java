@@ -29,7 +29,7 @@ public class UserDAO {
         }
     }
 
-    public UserEntity getUserByID(int id) throws SQLException {
+    public UserEntity getUserByID(Integer id) throws SQLException {
         String query = "SELECT * FROM users WHERE id = ?";
 
         try(
@@ -89,7 +89,7 @@ public class UserDAO {
         }
     }
 
-    public void deleteUser(int id) throws SQLException {
+    public void deleteUser(Integer id) throws SQLException {
         String sql = """
                 DELETE FROM users WHERE id = ?; 
         """;

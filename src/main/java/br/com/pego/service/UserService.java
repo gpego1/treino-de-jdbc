@@ -4,6 +4,7 @@ import br.com.pego.dto.UserDTO;
 import br.com.pego.model.UserEntity;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserService {
 
@@ -13,8 +14,14 @@ public class UserService {
         this.userDAO = new UserDAO();
     }
 
-    public List<UserEntity> getUsers() throws SQLException {
-        return userDAO.findAllUsers();
+    public List<UserDTO> getUsers() throws SQLException {
+        List<UserEntity> entities = userDAO.findAllUsers();
+
+        List<UserDTO> userDTOS = entities.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+
+        return userDTOS;
     }
 
     public UserDTO getUserById(Integer id) throws SQLException {
@@ -27,7 +34,11 @@ public class UserService {
     }
 
     public void createUser(UserDTO dto) throws SQLException {
-        List<UserEntity> users = this.getUsers();
+        List<UserDTO> dtos = this.getUsers();
+
+        List<UserEntity> users = dtos.stream()
+                .map(this::convertToEntity)
+                .toList();
 
         Integer id = users
                 .stream()
@@ -43,22 +54,25 @@ public class UserService {
 
     }
 
-    public void updateUser(Integer id) throws SQLException {
-        UserDTO dto = this.getUserById(id);
-        UserEntity userEntity = this.convertToEntity(dto);
+    public void updateUser(Integer id, UserDTO dto) throws SQLException {
+        UserEntity userEntity = userDAO.getUserByID(id);
 
-        if (userEntity.getId() == null) {
+        if (userEntity == null) {
             throw new RuntimeException("User not found");
         }
+
+        userEntity.setName(dto.name());
+        userEntity.setEmail(dto.email());
+        userEntity.setPassword(dto.password());
+        userEntity.setDateOfBirth(dto.dateOfBirth());
 
         userDAO.updateUser(userEntity);
     }
 
     public void deleteUser(Integer id) throws SQLException {
-        UserDTO dto = this.getUserById(id);
+        UserEntity userEntity = userDAO.getUserByID(id);
 
-        UserEntity userEntity = this.convertToEntity(dto);
-        if (userEntity.getId() == null) {
+        if (userEntity == null) {
             throw new RuntimeException("User not found");
         }
         userDAO.deleteUser(userEntity.getId());
