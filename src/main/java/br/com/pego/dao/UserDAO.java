@@ -19,11 +19,14 @@ public class UserDAO {
                 ResultSet rs = preparedStatement.executeQuery();
         ) {
             while (rs.next()) {
-                rs.getInt("id");
-                rs.getString("name");
-                rs.getString("email");
-                rs.getString("password");
-                rs.getDate("date");
+                UserEntity user = new UserEntity(
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getString("email"),
+                    rs.getString("password"),
+                    rs.getDate("date_of_birth")
+                );
+                users.add(user);
             }
             return users;
         }
@@ -54,8 +57,8 @@ public class UserDAO {
 
     public void createUser(UserEntity user) throws SQLException {
         String sql = """
-                INSERT INTO users(id, name, email, password, date_od_birth) VALUES
-                (? ? ? ? ?)
+                INSERT INTO users(id, name, email, password, date_of_birth) VALUES
+                (?, ?, ?,  ?,  ?)
                 """;
 
         try (
@@ -66,7 +69,7 @@ public class UserDAO {
             ps.setString(2, user.getName());
             ps.setString(3, user.getEmail());
             ps.setString(4, user.getPassword());
-            ps.setDate(5, (Date) user.getDateOfBirth());
+            ps.setDate(5, user.getDateOfBirth());
             ps.executeUpdate();
         }
     }

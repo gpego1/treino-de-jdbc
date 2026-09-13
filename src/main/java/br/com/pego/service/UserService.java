@@ -1,5 +1,6 @@
 package br.com.pego.service;
 import br.com.pego.dao.UserDAO;
+import br.com.pego.dto.CreateUserDTO;
 import br.com.pego.dto.UserDTO;
 import br.com.pego.model.UserEntity;
 import java.sql.SQLException;
@@ -17,11 +18,9 @@ public class UserService {
     public List<UserDTO> getUsers() throws SQLException {
         List<UserEntity> entities = userDAO.findAllUsers();
 
-        List<UserDTO> userDTOS = entities.stream()
+        return entities.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
-
-        return userDTOS;
     }
 
     public UserDTO getUserById(Integer id) throws SQLException {
@@ -33,11 +32,9 @@ public class UserService {
         }
     }
 
-    public void createUser(UserDTO dto) throws SQLException {
-        List<UserDTO> dtos = this.getUsers();
+    public void createUser(CreateUserDTO dto) throws SQLException {
 
-        List<UserEntity> users = dtos.stream()
-                .map(this::convertToEntity)
+        List<UserEntity> users = userDAO.findAllUsers().stream()
                 .toList();
 
         Integer id = users
@@ -51,10 +48,9 @@ public class UserService {
             userEntity.setId(id);
             userDAO.createUser(userEntity);
         }
-
     }
 
-    public void updateUser(Integer id, UserDTO dto) throws SQLException {
+    public void updateUser(Integer id, CreateUserDTO dto) throws SQLException {
         UserEntity userEntity = userDAO.getUserByID(id);
 
         if (userEntity == null) {
@@ -88,7 +84,7 @@ public class UserService {
         );
     }
 
-    private UserEntity convertToEntity(UserDTO dto) {
+    private UserEntity convertToEntity(CreateUserDTO dto) {
         return new UserEntity(
                 dto.name(),
                 dto.email(),

@@ -10,4 +10,15 @@ public record UserDTO(
         String password,
         Date dateOfBirth
 ) {
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                '}';
+    }
+
 }

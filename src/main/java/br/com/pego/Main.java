@@ -1,17 +1,49 @@
 package br.com.pego;
+import br.com.pego.dto.CreateUserDTO;
+import br.com.pego.dto.UserDTO;
+import br.com.pego.presentation.UserController;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+    public static void main(String[] args) throws SQLException {
+        LocalDate dateOfBirth = LocalDate.of(2007, 5, 20);
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
-        }
+        UserController userController = new UserController();
+
+
+        List<CreateUserDTO> createUsers = List.of(
+                new CreateUserDTO("Rodrigo", "rodrigo@email.com", "hwgswhgusw",  java.sql.Date.valueOf(dateOfBirth)),
+                new CreateUserDTO("Pedro", "pedro@email.com", "hwgswhgusw",  java.sql.Date.valueOf(dateOfBirth)),
+                new CreateUserDTO("João", "joao@email.com", "hwgswhgusw",  java.sql.Date.valueOf(dateOfBirth)),
+                new CreateUserDTO("Gabriel", "gpego@email.com", "hwgswhgusw",  java.sql.Date.valueOf(dateOfBirth)),
+                new CreateUserDTO("Maria", "maria@email.com", "hwgswhgusw",  java.sql.Date.valueOf(dateOfBirth))
+        );
+
+        createUsers.forEach(user -> {
+            try {
+                userController.createUser(user);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+
+        userController.getAllUsers();
+
+        System.out.println();
+        UserDTO dtoGetId = userController.getUserById(4);
+        System.out.println(dtoGetId);
+
+
+        CreateUserDTO userToUpdate  = new CreateUserDTO("Luiza", "luiza@email.com", "nhbdwhushwsw", java.sql.Date.valueOf(dateOfBirth));
+        userController.updateUser(4, userToUpdate);
+        System.out.println(userController.getUserById(4));
+
+        System.out.println();
+        userController.deleteUser(5);
+        userController.getAllUsers();
+
+
     }
 }
