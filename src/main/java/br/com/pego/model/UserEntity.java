@@ -22,6 +22,14 @@ public class UserEntity {
         this.dateOfBirth = dateOfBirth;
     }
 
+    public UserEntity(String name, String email, String password,  Date dateOfBirth) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.dateOfBirth = dateOfBirth;
+    }
+
+
     public Integer getId() {
         return this.id;
     }

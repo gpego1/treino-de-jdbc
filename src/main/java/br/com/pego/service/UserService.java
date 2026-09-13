@@ -17,15 +17,65 @@ public class UserService {
         return userDAO.findAllUsers();
     }
 
+    public UserDTO getUserById(Integer id) throws SQLException {
+        UserEntity userEntity = userDAO.getUserByID(id);
+        if (userEntity != null) {
+            return this.convertToDTO(userEntity);
+        } else {
+            throw new RuntimeException("User not found");
+        }
+    }
 
+    public void createUser(UserDTO dto) throws SQLException {
+        List<UserEntity> users = this.getUsers();
 
+        Integer id = users
+                .stream()
+                .map(UserEntity::getId)
+                .max(Integer::compareTo)
+                .orElse(0) + 1;
 
+        UserEntity userEntity = this.convertToEntity(dto);
+        if (userEntity.getId() == null) {
+            userEntity.setId(id);
+            userDAO.createUser(userEntity);
+        }
 
+    }
 
+    public void updateUser(Integer id) throws SQLException {
+        UserDTO dto = this.getUserById(id);
+        UserEntity userEntity = this.convertToEntity(dto);
+
+        if (userEntity.getId() == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        userDAO.updateUser(userEntity);
+    }
+
+    public void deleteUser(Integer id) throws SQLException {
+        UserDTO dto = this.getUserById(id);
+
+        UserEntity userEntity = this.convertToEntity(dto);
+        if (userEntity.getId() == null) {
+            throw new RuntimeException("User not found");
+        }
+        userDAO.deleteUser(userEntity.getId());
+    }
+
+    private UserDTO convertToDTO(UserEntity userEntity) {
+        return new UserDTO(
+                userEntity.getId(),
+                userEntity.getName(),
+                userEntity.getEmail(),
+                userEntity.getPassword(),
+                userEntity.getDateOfBirth()
+        );
+    }
 
     private UserEntity convertToEntity(UserDTO dto) {
         return new UserEntity(
-                dto.id(),
                 dto.name(),
                 dto.email(),
                 dto.password(),
