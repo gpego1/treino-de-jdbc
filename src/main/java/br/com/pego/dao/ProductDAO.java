@@ -1,6 +1,5 @@
 package br.com.pego.dao;
 import br.com.pego.database.ConnectionFactory;
-import br.com.pego.dto.ProductDTO;
 import br.com.pego.model.ProductEntity;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDAO {
-    public List<ProductDTO> listAllProducts() throws SQLException {
-        List<ProductDTO> products = new ArrayList<>();
+    public List<ProductEntity> listAllProducts() throws SQLException {
+        List<ProductEntity> products = new ArrayList<>();
 
         try(
                 Connection con = ConnectionFactory.getConnection();
@@ -28,7 +27,7 @@ public class ProductDAO {
         }
     }
 
-    public ProductDTO getProductById(int id) throws SQLException {
+    public ProductEntity getProductById(int id) throws SQLException {
         String query = "select * from product where id = ?";
 
         try(
@@ -40,7 +39,7 @@ public class ProductDAO {
                     ResultSet rs = ps.executeQuery();
                     ) {
                 if (rs.next()) {
-                    return new ProductDTO(
+                    return new ProductEntity(
                             rs.getInt("id"),
                             rs.getString("name"),
                             rs.getDouble("price"),
@@ -52,7 +51,7 @@ public class ProductDAO {
         return null;
     }
 
-    public void createPoduct(ProductDTO product) throws SQLException {
+    public void createPoduct(ProductEntity product) throws SQLException {
         String sql = """
                 INSERT INTO TABLE products(id, name, price, quantity) VALUES 
                 (? ? ? ?)
@@ -63,15 +62,15 @@ public class ProductDAO {
                 PreparedStatement ps = con.prepareStatement(sql);
                 ){
 
-            ps.setInt(1, product.id());
-            ps.setString(2, product.name());
-            ps.setDouble(3, product.price());
-            ps.setInt(4, product.quantity());
+            ps.setInt(1, product.getId());
+            ps.setString(2, product.getName());
+            ps.setDouble(3, product.getPrice());
+            ps.setInt(4, product.getQuantity());
             ps.executeUpdate();
         }
     }
 
-    public void updatePoduct(ProductDTO product) throws SQLException {
+    public void updatePoduct(ProductEntity product) throws SQLException {
         String sql = """
                 UPDATE products SET name = ?, price = ?, quantity = ? WHERE id = ?;
                 """;
@@ -79,10 +78,10 @@ public class ProductDAO {
                 Connection con = ConnectionFactory.getConnection();
                 PreparedStatement ps = con.prepareStatement(sql);
         ) {
-            ps.setString(1, product.name());
-            ps.setDouble(2, product.price());
-            ps.setInt(3, product.quantity());
-            ps.setInt(4, product.id());
+            ps.setString(1, product.getName());
+            ps.setDouble(2, product.getPrice());
+            ps.setInt(3, product.getQuantity());
+            ps.setInt(4, product.getId());
             ps.executeUpdate();
         }
     }
