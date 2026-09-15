@@ -15,6 +15,12 @@ public class ProductEntity {
         this.quantity = quantity;
     }
 
+    public ProductEntity(String name, Double price, Integer quantity) {
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+    }
+
     public Integer getId() {
         return id;
     }

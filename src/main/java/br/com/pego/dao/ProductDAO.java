@@ -14,21 +14,23 @@ public class ProductDAO {
 
         try(
                 Connection con = ConnectionFactory.getConnection();
-                PreparedStatement ps = con.prepareStatement("select * from product");
+                PreparedStatement ps = con.prepareStatement("SELECT * FROM products");
                 ResultSet rs = ps.executeQuery();
                 ) {
             while (rs.next()) {
-                rs.getInt("id");
-                rs.getString("name");
-                rs.getDouble("price");
-                rs.getInt("quantity");
+                ProductEntity prod = new ProductEntity(rs.getInt("id"),
+                rs.getString("name"),
+                rs.getDouble("price"),
+                rs.getInt("quantity")
+                );
+                products.add(prod);
             }
             return products;
         }
     }
 
-    public ProductEntity getProductById(int id) throws SQLException {
-        String query = "select * from product where id = ?";
+    public ProductEntity getProductById(Integer id) throws SQLException {
+        String query = "select * from products where id = ?";
 
         try(
                 Connection con = ConnectionFactory.getConnection();
@@ -53,8 +55,8 @@ public class ProductDAO {
 
     public void createPoduct(ProductEntity product) throws SQLException {
         String sql = """
-                INSERT INTO TABLE products(id, name, price, quantity) VALUES 
-                (? ? ? ?)
+                INSERT INTO products(id, name, price, quantity) VALUES 
+                (?, ?, ?, ?)
                 """;
 
         try (
@@ -86,7 +88,7 @@ public class ProductDAO {
         }
     }
 
-    public void deletePoduct(int id) throws SQLException {
+    public void deletePoduct(Integer id) throws SQLException {
         String sql = """
                 DELETE FROM products WHERE id = ?;
         """;
