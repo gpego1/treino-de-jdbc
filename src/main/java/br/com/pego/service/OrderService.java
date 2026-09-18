@@ -73,7 +73,7 @@ public class OrderService {
         OrderEntity order = orderDAO.getOrderById(id);
 
         if (order != null) {
-            order.setTotal(applyDiscount(id));
+            order.setTotal(this.getTotalValue(id));
             orderDAO.updateOrder(order);
         } else {
             throw new RuntimeException("Order Not Found");
@@ -99,6 +99,12 @@ public class OrderService {
         return order.getTotal();
     }
 
+    private BigDecimal getTotalValue(Integer id) throws SQLException {
+        OrderItemDTO orderItemDTO = orderItemService.findByOrderId(id);
+
+        return  BigDecimal.valueOf(orderItemDTO.quantity()).multiply(orderItemDTO.unitPrice()).subtract(applyDiscount(id)) ;
+    }
+
 
     private boolean isAgeUserAgeValid(Integer userId) throws SQLException {
         UserDTO userDTO = userService.getUserById(userId);
@@ -120,10 +126,4 @@ public class OrderService {
         );
     }
 
-    private OrderEntity convertToEntity(CreateOrderDTO dto) {
-        return new OrderEntity(
-                dto.userId(),
-                dto.total()
-        );
-    }
 }

@@ -9,4 +9,15 @@ public record OrderItemDTO(
         Integer quantity,
         BigDecimal discount
 )  {
+    @Override
+    public String toString() {
+        return "OrderItemDTO{" +
+                "id=" + id +
+                ", orderId=" + orderId +
+                ", productId=" + productId +
+                ", unitPrice=" + unitPrice +
+                ", quantity=" + quantity +
+                ", discount=" + discount +
+                '}';
+    }
 }

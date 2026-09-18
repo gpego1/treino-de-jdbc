@@ -3,6 +3,7 @@ import br.com.pego.dao.OrderItemDAO;
 import br.com.pego.dto.CreateOrderItemDTO;
 import br.com.pego.dto.OrderDTO;
 import br.com.pego.dto.OrderItemDTO;
+import br.com.pego.dto.ProductDTO;
 import br.com.pego.model.OrderEntity;
 import br.com.pego.model.OrderItemEntity;
 import br.com.pego.model.ProductEntity;
@@ -37,22 +38,34 @@ public class OrderItemService {
         }
     }
 
+    public OrderItemDTO findByOrderId(Integer orderId) throws SQLException {
+        OrderItemEntity entity = orderItemDAO.findOrderItemByOrderId(orderId);
+
+        if (entity != null) {
+            return convertToDTO(entity);
+        }
+
+        throw new RuntimeException("OrderItem not found with orderId: " + orderId);
+    }
+
     public void createOrderItem(CreateOrderItemDTO dto) throws SQLException {
         Integer id = orderItemDAO.getOrderItems().stream()
                 .map(OrderItemEntity::getId)
                 .max(Integer::compareTo)
                 .orElse(0) + 1;
 
-        List<ProductEntity> products = dto.products();
+        List<ProductDTO> products = dto.products();
 
-        for (ProductEntity product : products) {
+        for (ProductDTO product : products) {
             OrderItemEntity orderItem = new OrderItemEntity(
                     dto.order().getId(),
-                    product.getId(),
-                    dto.unitPrice(),
+                    product.id(),
+                    BigDecimal.valueOf(product.price()),
                     dto.quantity(),
+
                     this.generateDiscount(
-                            dto.order().getId()
+                            dto.unitPrice(),
+                            dto.quantity()
                     )
             );
             orderItem.setId(id);
@@ -67,7 +80,13 @@ public class OrderItemService {
         if (entity != null) {
             entity.setUnitPrice(dto.unitPrice());
             entity.setQuantity(dto.quantity());
-            entity.setDiscount(dto.discount());
+
+            entity.setDiscount(
+                    this.generateDiscount(
+                            dto.unitPrice(),
+                            dto.quantity()
+                    )
+            );
             orderItemDAO.updateOrderItem(entity);
         }
     }
@@ -85,9 +104,8 @@ public class OrderItemService {
     }
 
 
-    private BigDecimal generateDiscount(Integer orderId) throws SQLException {
-        OrderDTO orderDTO = orderService.findOrderById(orderId);
-        BigDecimal total = orderDTO.total();
+    private BigDecimal generateDiscount(BigDecimal unitPrice, Integer quantity)  {
+        BigDecimal total = BigDecimal.valueOf(quantity).multiply(unitPrice);
         BigDecimal discount = BigDecimal.ZERO;
 
             if (total.compareTo(BigDecimal.valueOf(100.00)) >= 0) {

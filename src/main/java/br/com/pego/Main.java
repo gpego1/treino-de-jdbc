@@ -1,6 +1,8 @@
 package br.com.pego;
 import br.com.pego.dto.*;
+import br.com.pego.model.ProductEntity;
 import br.com.pego.presentation.OrderController;
+import br.com.pego.presentation.OrderItemController;
 import br.com.pego.presentation.ProductController;
 import br.com.pego.presentation.UserController;
 
@@ -16,6 +18,8 @@ public class Main {
     public static void main(String[] args) throws SQLException {
         OrderController orderController = new OrderController();
         UserController userController = new UserController();
+        ProductController productController = new ProductController();
+        OrderItemController orderItemController = new OrderItemController();
 
 //        CreateUserDTO newUser = new CreateUserDTO("teste", "wshujw", "bhwgshw", Date.valueOf(LocalDate.now()));
 //
@@ -33,5 +37,18 @@ public class Main {
 //
 //        orderController.deleteOrder(1);
 //        orderController.getOrders();
+
+
+        List<ProductDTO> products = productController.getProducts();
+
+
+        orderItemController.createOrderItem(
+                1,
+                products,
+                BigDecimal.valueOf(263.50),
+                2,
+
+
+                );
     }
 }

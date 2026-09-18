@@ -52,6 +52,28 @@ public class OrderItemDAO {
         return null;
     }
 
+    public OrderItemEntity findOrderItemByOrderId(Integer orderId) throws SQLException {
+        String query = "SELECT * FROM order_items WHERE order_id = ?";
+        try (
+                Connection con = ConnectionFactory.getConnection();
+                PreparedStatement ps = con.prepareStatement(query);
+                ResultSet rs = ps.executeQuery();
+        ) {
+            ps.setInt(1, orderId);
+            if (rs.next()) {
+                return new OrderItemEntity(
+                        rs.getInt(1),
+                        rs.getInt(2),
+                        rs.getInt(3),
+                        rs.getBigDecimal(4),
+                        rs.getInt(5),
+                        rs.getBigDecimal(6)
+                );
+            }
+        }
+        return null;
+    }
+
     public OrderItemEntity getOrderItem(Integer id) throws SQLException {
         String query = "SELECT * FROM order_items WHERE id = ?";
 

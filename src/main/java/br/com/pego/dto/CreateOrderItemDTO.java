@@ -6,9 +6,8 @@ import java.util.List;
 
 public record CreateOrderItemDTO(
         OrderEntity order,
-        List<ProductEntity> products,
+        List<ProductDTO> products,
         BigDecimal unitPrice,
-        Integer quantity,
-        BigDecimal discount
+        Integer quantity
 ) {
 }

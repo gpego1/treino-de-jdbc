@@ -12,14 +12,8 @@ public class ProductController {
         this.productService = new ProductService();
     }
 
-    public void  getProducts() throws SQLException {
-        List<ProductDTO> products = productService.getProducts();
-
-        products.forEach(
-                p -> {
-                    System.out.println(p.toString());
-                }
-        );
+    public List<ProductDTO>   getProducts() throws SQLException {
+        return productService.getProducts();
     }
 
     public ProductDTO getProduct(Integer id) throws SQLException {
