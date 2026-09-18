@@ -41,14 +41,15 @@ public class Main {
 
         List<ProductDTO> products = productController.getProducts();
 
-
-        orderItemController.createOrderItem(
+        CreateOrderItemDTO orderItemDTO = new CreateOrderItemDTO(
                 1,
                 products,
-                BigDecimal.valueOf(263.50),
-                2,
+                BigDecimal.valueOf(products.stream().map(ProductDTO::price).findFirst().orElseThrow(() -> new RuntimeException("Invalid operation"))),
+                12
+        );
 
+        orderItemController.createOrderItem(orderItemDTO);
 
-                );
+        orderItemController.getAllOrderItems();
     }
 }

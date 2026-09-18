@@ -1,12 +1,9 @@
 package br.com.pego.service;
 import br.com.pego.dao.OrderItemDAO;
 import br.com.pego.dto.CreateOrderItemDTO;
-import br.com.pego.dto.OrderDTO;
 import br.com.pego.dto.OrderItemDTO;
 import br.com.pego.dto.ProductDTO;
-import br.com.pego.model.OrderEntity;
 import br.com.pego.model.OrderItemEntity;
-import br.com.pego.model.ProductEntity;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -14,11 +11,9 @@ import java.util.List;
 
 public class OrderItemService {
     private final OrderItemDAO  orderItemDAO;
-    private final OrderService orderService;
 
     public OrderItemService() {
         this.orderItemDAO = new OrderItemDAO();
-        this.orderService = new OrderService();
     }
 
     public List<OrderItemDTO> findAll() throws SQLException {
@@ -58,7 +53,7 @@ public class OrderItemService {
 
         for (ProductDTO product : products) {
             OrderItemEntity orderItem = new OrderItemEntity(
-                    dto.order().getId(),
+                    dto.orderId(),
                     product.id(),
                     BigDecimal.valueOf(product.price()),
                     dto.quantity(),
@@ -68,7 +63,7 @@ public class OrderItemService {
                             dto.quantity()
                     )
             );
-            orderItem.setId(id);
+            orderItem.setId(id++);
 
             orderItemDAO.createOrderItem(orderItem);
         }
