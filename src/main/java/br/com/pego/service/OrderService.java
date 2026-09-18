@@ -2,10 +2,12 @@ package br.com.pego.service;
 import br.com.pego.dao.OrderDAO;
 import br.com.pego.dto.CreateOrderDTO;
 import br.com.pego.dto.OrderDTO;
+import br.com.pego.dto.OrderItemDTO;
 import br.com.pego.dto.UserDTO;
 import br.com.pego.model.OrderEntity;
 import br.com.pego.model.ProductEntity;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,10 +17,12 @@ import java.util.List;
 public class OrderService {
     private final OrderDAO orderDAO;
     private final UserService userService;
+    private final OrderItemService orderItemService;
 
     public OrderService() {
         this.orderDAO = new OrderDAO();
         this.userService = new UserService();
+        this.orderItemService = new OrderItemService();
     }
 
     public List<OrderDTO> findAll() throws SQLException {
@@ -65,11 +69,11 @@ public class OrderService {
         }
     }
 
-    public void updateOrder(Integer id, CreateOrderDTO createOrderDTO) throws SQLException {
+    public void updateOrder(Integer id) throws SQLException {
         OrderEntity order = orderDAO.getOrderById(id);
 
         if (order != null) {
-            order.setTotal(createOrderDTO.total());
+            order.setTotal(applyDiscount(id));
             orderDAO.updateOrder(order);
         } else {
             throw new RuntimeException("Order Not Found");
@@ -83,6 +87,16 @@ public class OrderService {
         } else {
             throw new RuntimeException("Order Not Found");
         }
+    }
+    
+    private BigDecimal applyDiscount(Integer id)  throws SQLException {
+        OrderEntity order = orderDAO.getOrderById(id);
+        if (order != null) {
+            BigDecimal discount = orderItemService.getDiscountByOrderId(id);
+            order.setTotal(order.getTotal().subtract(discount));
+        }
+        assert order != null;
+        return order.getTotal();
     }
 
 

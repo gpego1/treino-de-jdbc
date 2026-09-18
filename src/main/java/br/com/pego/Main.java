@@ -26,12 +26,12 @@ public class Main {
 //        orderController.createOrder(newOrder);
 //        orderController.getOrders();
 
-        System.out.println(orderController.getOrderById(1));
-
-        orderController.updateOrder(1, new CreateOrderDTO(6, BigDecimal.valueOf(263.50)));
-        System.out.println(orderController.getOrderById(1));
-
-        orderController.deleteOrder(1);
-        orderController.getOrders();
+//        System.out.println(orderController.getOrderById(1));
+//
+//        orderController.updateOrder(1, new CreateOrderDTO(6, BigDecimal.valueOf(263.50)));
+//        System.out.println(orderController.getOrderById(1));
+//
+//        orderController.deleteOrder(1);
+//        orderController.getOrders();
     }
 }

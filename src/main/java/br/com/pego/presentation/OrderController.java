@@ -29,8 +29,8 @@ public class OrderController {
         orderService.createOrder(order);
     }
 
-    public void updateOrder(Integer id, CreateOrderDTO order) throws SQLException {
-        orderService.updateOrder(id, order);
+    public void updateOrder(Integer id) throws SQLException {
+        orderService.updateOrder(id);
     }
 
     public void deleteOrder(Integer id) throws SQLException {
