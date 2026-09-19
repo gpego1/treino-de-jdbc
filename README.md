@@ -1,3 +1,28 @@
+## JDBC Study
+
+---
+
+## 📋 About
+This repository contains practical exercises using JDBC, covering topics such as:
+
+* Establishing a connection to a MySQL database
+* Executing SQL commands (SELECT, INSERT, UPDATE, DELETE) via Java
+* Using Statement and/or PreparedStatement
+* Best practices for managing connections and resources (open/close)
+
+---
+
+## 🛠️ Stack & Technologies
+* Java 21
+* Maven (dependcy management and build)
+* MySQL Connector/J (com.mysql:mysql-connector-j)
+* JUnit 4 (tests)
+
+---
+
+## PT-BR
+
+---
 ## Treino de JDBC
 ---
 
